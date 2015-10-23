@@ -3,6 +3,7 @@ package slacker
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 )
 
@@ -13,17 +14,21 @@ type Slacker struct {
 }
 
 type payload struct {
-	text     string `json:"text"`
-	icon     string `json:"icon_url"`
-	username string `json:"username"`
+	Text     string `json:"text"`
+	Icon     string `json:"icon_url"`
+	Username string `json:"username"`
 }
 
 func (s *Slacker) Send(text string) error {
 
+	if len(s.URL) == 0 {
+		return errors.New("URL is required")
+	}
+
 	payload, err := json.Marshal(payload{
-		text:     text,
-		icon:     s.Icon,
-		username: s.Username,
+		Text:     text,
+		Icon:     s.Icon,
+		Username: s.Username,
 	})
 	if err != nil {
 		return err
